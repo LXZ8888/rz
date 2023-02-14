@@ -1,30 +1,28 @@
 <template>
-  <div class="dashboard-container">
-    <div class="dashboard-text">name: {{ name }}</div>
+  <div>
+    <!-- 需求：num可修改持久化用cookie处理 -->
+    <h1>{{ num }}</h1>
+    <button @click="setNum">修改num</button>
   </div>
 </template>
 
 <script>
-import { mapGetters } from 'vuex'
-
+import jsCookie from 'js-cookie'
 export default {
-  name: 'Dashboard',
-  computed: {
-    ...mapGetters([
-      'name'
-    ])
+  data() {
+    return {
+      // +是将字符串转为数字，初始值设置
+      num: +jsCookie.get('num') || 10
+    }
+  },
+  methods: {
+    setNum() {
+      this.num++
+      // 存储数据
+      jsCookie.set('num', this.num)
+    }
   }
 }
 </script>
 
-<style lang="scss" scoped>
-.dashboard {
-  &-container {
-    margin: 30px;
-  }
-  &-text {
-    font-size: 30px;
-    line-height: 46px;
-  }
-}
-</style>
+<style></style>
