@@ -1,28 +1,18 @@
 <template>
   <div>
-    <!-- 需求：num可修改持久化用cookie处理 -->
-    <h1>{{ num }}</h1>
-    <button @click="setNum">修改num</button>
+    首页
+    <button @click="btnClick">调用api</button>
   </div>
 </template>
-
 <script>
-import jsCookie from 'js-cookie'
+import { sysLogin } from '@/api/test'
 export default {
-  data() {
-    return {
-      // +是将字符串转为数字，初始值设置
-      num: +jsCookie.get('num') || 10
-    }
-  },
   methods: {
-    setNum() {
-      this.num++
-      // 存储数据
-      jsCookie.set('num', this.num)
+    async btnClick() {
+      const res = await sysLogin()
+      console.log(res)
     }
   }
 }
 </script>
-
 <style></style>
