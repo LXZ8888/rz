@@ -1,5 +1,5 @@
 module.exports = {
-  title: '黑马人资',
+  title: '人资92期',
 
   /**
    * @type {boolean} true | false
