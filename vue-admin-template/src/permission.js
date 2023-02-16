@@ -2,13 +2,16 @@
 import router from './router'
 import store from '@/store' // store===this.$store
 const whitePage = ['/login', '/404']
-router.beforeEach((to, from, next) => {
+router.beforeEach(async(to, from, next) => {
   if (store.state.user.token) {
     if (to.path.toLowerCase() === '/login') {
       next('/')
     } else {
-      console.log('调用接口获取用户信息')
-      store.dispatch('user/getUserInfo')
+      if (!store.state.user.userInfo.userId) {
+        console.log('调用接口获取用户信息')
+        await store.dispatch('user/getUserInfo')
+      }
+
       next()
     }
   } else {
