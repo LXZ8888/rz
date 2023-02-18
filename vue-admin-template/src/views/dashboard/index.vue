@@ -1,85 +1,60 @@
 <template>
-  <div>
-    <!-- 树形控件,data：树形数据 -->
-    <el-tree
-      :data="list"
-      :props="{ label: 'name', children: 'child' }"
-      default-expand-all
-      @node-click="handleNodeClick"
-    >
-      <template v-slot="{ data }">
-        <div class="item">
-          <div class="name">{{ data.name }}</div>
-          <div>管理员</div>
-          <div>操作</div>
-        </div>
-      </template>
-    </el-tree>
-  </div>
+  <div />
 </template>
 
 <script>
 export default {
   data() {
-    return {
-      list: [
-        {
-          name: '一级 1',
-          child: [
-            {
-              name: '二级 1-1',
-              child: [
-                {
-                  name: '三级 1-1-1'
-                }
-              ]
-            }
-          ]
-        },
-        {
-          name: '一级 2',
-          child: [
-            {
-              name: '二级 1-1',
-              child: [
-                {
-                  name: '三级 1-1-1'
-                }
-              ]
-            }
-          ]
-        },
-        {
-          name: '一级 3',
-          child: [
-            {
-              name: '二级 1-1',
-              child: [
-                {
-                  name: '三级 1-1-1'
-                }
-              ]
-            }
-          ]
-        }
-      ]
-    }
+    return {}
+  },
+  created() {
+    // 树形数据转换
+
+    const list = [
+      {
+        name: '广东',
+        id: 1,
+        pid: ''
+      },
+      {
+        name: '广州',
+        id: 2,
+        pid: 1
+      },
+      {
+        name: '深圳',
+        id: 3,
+        pid: 1
+      },
+      {
+        name: '宝安',
+        id: 4,
+        pid: 3
+      },
+      {
+        name: '石岩',
+        id: 5,
+        pid: 4
+      }
+    ]
+    // 1、找出第一层数据
+    console.log(this.changeData(list, ''))
+    // 2、找出广东的子集
+    console.log(this.changeData(list, 1))
+    // 3、找出来的数据都要有children=[]
+    // 4、children的值应该是当前项的子集，当前项的id是子集的pid
   },
   methods: {
-    handleNodeClick(data) {
-      console.log(data)
+    changeData(arr, pid) {
+      return arr.filter((item) => {
+        if (item.pid === pid) {
+          item.children = this.changeData(arr, item.id)
+          return true
+        }
+      })
     }
   }
 }
 </script>
 
-<style scoped lang="scss">
-.item {
-  display: flex;
-  align-items: center;
-  width: 100%;
-  .name {
-    flex: 1;
-  }
-}
-</style>
+<style></style>
