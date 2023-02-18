@@ -11,8 +11,13 @@
     </div>
     <el-dropdown trigger="click">
       <div class="user">
-        <img src="@/assets/common/head.jpg" alt="" class="avatar">
-        <span class="username">我c罗必胜</span>
+        <img
+          v-errorimg="avatar1"
+          :src="$store.state.user.userInfo.staffPhoto"
+          alt=""
+          class="avatar"
+        >
+        <span class="username">{{ $store.state.user.userInfo.username }}</span>
         <i class="el-icon-caret-bottom" />
       </div>
       <template #dropdown>
@@ -37,6 +42,11 @@ export default {
   components: {
     Hamburger
   },
+  data() {
+    return {
+      avatar1: require('@/assets/common/img.jpeg')
+    }
+  },
   computed: {
     ...mapGetters(['sidebar', 'avatar'])
   },
@@ -52,6 +62,13 @@ export default {
       location.href = 'http://www.kuwo.cn/rankList'
     },
     exit() {
+      this.$confirm('您确定退出该网站吗')
+        .then(() => {
+          this.$message.success('退出成功')
+          this.$store.commit('user/LOGOUT')
+          this.$router.push('/login')
+        })
+        .catch(() => {})
       console.log('退出')
     }
   }

@@ -61,7 +61,6 @@ export default {
             this.$router.push('/')
             console.log(res)
           } else {
-            console.log('121')
             this.$message.error(res.message)
           }
         }

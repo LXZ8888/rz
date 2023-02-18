@@ -42,11 +42,11 @@ module.exports = {
     // before: require('./mock/mock-server.js')
     // 设置代理
     proxy: {
-      '/xxx': {
+      '/api': {
         target: 'http://119.91.150.211:3000/api',
         // target+'/xxx'
         pathRewrite: {
-          '^/xxx': ''
+          '^/api': ''
         }
       }
     }
