@@ -27,7 +27,9 @@
               </span>
               <template #dropdown>
                 <el-dropdown-menu>
-                  <el-dropdown-item>添加子部门</el-dropdown-item>
+                  <el-dropdown-item
+                    @click.native="addEvent('')"
+                  >添加子部门</el-dropdown-item>
                 </el-dropdown-menu>
               </template>
             </el-dropdown>
@@ -52,10 +54,12 @@
                   <template #dropdown>
                     <el-dropdown-menu>
                       <el-dropdown-item
-                        @click.native="addEvent"
+                        @click.native="addEvent(data.id)"
                       >添加子部门</el-dropdown-item>
                       <el-dropdown-item>编辑部门</el-dropdown-item>
-                      <el-dropdown-item>删除部门</el-dropdown-item>
+                      <el-dropdown-item
+                        @click.native="delEvent(data.id)"
+                      >删除部门</el-dropdown-item>
                     </el-dropdown-menu>
                   </template>
                 </el-dropdown>
@@ -66,30 +70,20 @@
       </div>
     </el-card>
     <!-- 新增弹框组件 -->
-    <Add ref="add" />
+    <Add ref="add" :init-list="initList" @getData="getData" />
   </div>
 </template>
 <script>
-import Add from './components/index.vue'
-import { companyDepartment } from '@/api/departments'
+import Add from './components/add.vue'
+import { companyDepartment, companyDepartmentDelete } from '@/api/departments'
 export default {
   components: {
     Add
   },
   data() {
     return {
-      list: [
-        {
-          name: '总裁办',
-          manager: '管理员',
-          children: [
-            {
-              name: '深圳分公司',
-              manager: '张宇'
-            }
-          ]
-        }
-      ]
+      list: [],
+      initList: []
     }
   },
   created() {
@@ -98,8 +92,9 @@ export default {
   methods: {
     async getData() {
       const res = await companyDepartment()
+      this.initList = res.data.depts
       this.list = this.changeData(res.data.depts, '')
-      console.table(res.data.depts)
+      // console.table(res.data.depts)
     },
     // 树形数据转换
     changeData(arr, pid) {
@@ -115,8 +110,22 @@ export default {
       })
     },
     // 新增点击事件
-    addEvent() {
+    addEvent(id) {
       this.$refs.add.isShow = true
+      this.$refs.add.form.pid = id
+    },
+    // 删除点击事件
+    delEvent(id) {
+      this.$confirm('您确定删除吗', '提示')
+        .then(async() => {
+          // 删除调用api
+          await companyDepartmentDelete(id)
+          this.$message.success('删除成功')
+          this.getData()
+        })
+        .catch(() => {
+          console.log('s11c')
+        })
     }
   }
 }
