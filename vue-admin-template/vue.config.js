@@ -43,7 +43,7 @@ module.exports = {
     // 设置代理
     proxy: {
       '/api': {
-        target: 'http://119.91.150.211:3000/api',
+        target: ' http://localhost:3000/api',
         // target+'/xxx'
         pathRewrite: {
           '^/api': ''

@@ -33,7 +33,12 @@
             </el-dropdown>
           </div>
         </div>
-        <el-tree style="margin-top: 15px" :data="list" default-expand-all>
+        <el-tree
+          style="margin-top: 15px"
+          :data="list"
+          node-key="id"
+          default-expand-all
+        >
           <template v-slot="{ data }">
             <div class="tree-top">
               <div class="name">{{ data.name }}</div>
@@ -46,7 +51,9 @@
                   </span>
                   <template #dropdown>
                     <el-dropdown-menu>
-                      <el-dropdown-item>添加子部门</el-dropdown-item>
+                      <el-dropdown-item
+                        @click.native="addEvent"
+                      >添加子部门</el-dropdown-item>
                       <el-dropdown-item>编辑部门</el-dropdown-item>
                       <el-dropdown-item>删除部门</el-dropdown-item>
                     </el-dropdown-menu>
@@ -58,11 +65,17 @@
         </el-tree>
       </div>
     </el-card>
+    <!-- 新增弹框组件 -->
+    <Add ref="add" />
   </div>
 </template>
 <script>
+import Add from './components/index.vue'
 import { companyDepartment } from '@/api/departments'
 export default {
+  components: {
+    Add
+  },
   data() {
     return {
       list: [
@@ -100,6 +113,10 @@ export default {
           return true
         }
       })
+    },
+    // 新增点击事件
+    addEvent() {
+      this.$refs.add.isShow = true
     }
   }
 }

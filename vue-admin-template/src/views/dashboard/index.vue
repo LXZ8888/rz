@@ -1,5 +1,10 @@
 <template>
-  <div />
+  <el-tree
+    style="margin-top: 15px"
+    :data="list"
+    node-key="id"
+    default-expand-all
+  />
 </template>
 
 <script>
