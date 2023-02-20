@@ -7,7 +7,13 @@
         4：数据渲染
  -->
 
-  <div class="departments">
+  <div
+    v-loading="loading"
+    class="departments"
+    element-loading-text="拼命加载中"
+    element-loading-spinner="el-icon-loading"
+    element-loading-background="rgba(0, 0, 0, 0.8)"
+  >
     <el-card>
       <div class="main">
         <div class="tree-top">
@@ -56,7 +62,9 @@
                       <el-dropdown-item
                         @click.native="addEvent(data.id)"
                       >添加子部门</el-dropdown-item>
-                      <el-dropdown-item>编辑部门</el-dropdown-item>
+                      <el-dropdown-item
+                        @click.native="editEvent(data)"
+                      >编辑部门</el-dropdown-item>
                       <el-dropdown-item
                         @click.native="delEvent(data.id)"
                       >删除部门</el-dropdown-item>
@@ -75,6 +83,7 @@
 </template>
 <script>
 import Add from './components/add.vue'
+import { changeData } from '@/utils/index.js'
 import { companyDepartment, companyDepartmentDelete } from '@/api/departments'
 export default {
   components: {
@@ -83,7 +92,9 @@ export default {
   data() {
     return {
       list: [],
-      initList: []
+      initList: [],
+      loading: false,
+      mode: 'add'
     }
   },
   created() {
@@ -91,28 +102,32 @@ export default {
   },
   methods: {
     async getData() {
+      this.loading = true
       const res = await companyDepartment()
+      this.loading = false
       this.initList = res.data.depts
-      this.list = this.changeData(res.data.depts, '')
+      this.list = changeData(res.data.depts, '')
       // console.table(res.data.depts)
     },
-    // 树形数据转换
-    changeData(arr, pid) {
-      // 1:找出第一层数据
-      // 2:能找出任意项的子集（将pid使用形参）
-      // 3:给找出的每一项加入children=[]
-      // 4:使用递归找出当前项的子集（子集的pid是自己的id）
-      return arr.filter((item) => {
-        if (item.pid === pid) {
-          item.children = this.changeData(arr, item.id)
-          return true
-        }
-      })
-    },
+
+    // // 树形数据转换
+    // changeData(arr, pid) {
+    //   // 1:找出第一层数据
+    //   // 2:能找出任意项的子集（将pid使用形参）
+    //   // 3:给找出的每一项加入children=[]
+    //   // 4:使用递归找出当前项的子集（子集的pid是自己的id）
+    //   return arr.filter((item) => {
+    //     if (item.pid === pid) {
+    //       item.children = this.changeData(arr, item.id)
+    //       return true
+    //     }
+    //   })
+    // },
     // 新增点击事件
     addEvent(id) {
       this.$refs.add.isShow = true
       this.$refs.add.form.pid = id
+      this.$refs.add.mode = 'add'
     },
     // 删除点击事件
     delEvent(id) {
@@ -126,6 +141,13 @@ export default {
         .catch(() => {
           console.log('s11c')
         })
+    },
+    // 编辑点击事件。
+    editEvent(data) {
+      this.$refs.add.isShow = true
+      this.$refs.add.mode = 'edit'
+      // 深拷贝
+      this.$refs.add.form = JSON.parse(JSON.stringify(data))
     }
   }
 }

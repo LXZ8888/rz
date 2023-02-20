@@ -1,6 +1,6 @@
 <template>
   <el-dialog
-    title="新增部门"
+    :title="title"
     :visible.sync="isShow"
     width="600px"
     :before-close="handleClose"
@@ -57,7 +57,11 @@
 </template>
 
 <script>
-import { sysUserSimple, companyDepartmentPost } from '@/api/departments'
+import {
+  sysUserSimple,
+  companyDepartmentPost,
+  companyDepartmentPut
+} from '@/api/departments'
 export default {
   props: {
     initList: {
@@ -67,6 +71,7 @@ export default {
   },
   data() {
     return {
+      mode: 'add',
       isShow: false,
       textarea: '',
       userList: [],
@@ -84,10 +89,15 @@ export default {
           {
             validator: (rule, value, callback) => {
               // 需求：当前需要输入的值不能和组织结构中任意项的code相同，拿到所有项
-              const arr = this.initList.filter(
+              let arr = this.initList.filter(
                 (item) => item.pid === this.form.pid
               )
+
+              if (this.mode === 'edit') {
+                arr = arr.filter((item) => item.id !== this.form.id)
+              }
               const bol = arr.every((item) => item.name !== value)
+
               bol
                 ? callback()
                 : callback(new Error(`请不要输入重复部门名称` + value))
@@ -100,10 +110,20 @@ export default {
           { min: 1, max: 50, message: '请输入1-50个字符', trigger: 'change' },
           {
             validator: (rule, value, callback) => {
+              let bol = false
               // 需求：当前需要输入的值不能和组织结构中任意项的code相同，拿到所有项
-              const bol = this.initList.every((item) => {
-                return item.code !== value
-              })
+              if (this.mode === 'add') {
+                bol = this.initList.every((item) => {
+                  return item.code !== value
+                })
+              } else if (this.mode === 'edit') {
+                const arr = this.initList.filter((item) => {
+                  return item.id !== this.form.id
+                })
+                bol = arr.every((item) => {
+                  return item.code !== value
+                })
+              }
               bol ? callback() : callback(new Error(`部门编码重复` + value))
             }
           }
@@ -113,6 +133,15 @@ export default {
           { required: true, message: '必填', trigger: 'change' },
           { min: 1, max: 300, message: '请输入1-300个字符', trigger: 'change' }
         ] //  string  非必须    介绍
+      }
+    }
+  },
+  computed: {
+    title() {
+      if (this.mode === 'add') {
+        return '新增部门'
+      } else {
+        return '编辑部门'
       }
     }
   },
@@ -135,19 +164,31 @@ export default {
     submit() {
       this.$refs.form.validate(async(result) => {
         if (result) {
-          await companyDepartmentPost(this.form)
-          this.$message.success('新增部门成功')
+          this.loading = true
+          if (this.mode === 'add') {
+            await companyDepartmentPost(this.form)
+            this.$message.success('新增部门成功')
+            // 刷新父级列表数据
+            this.$emit('getData')
+          } else if (this.mode === 'edit') {
+            await companyDepartmentPut(this.form)
+            this.$message.success('编辑部门成功')
+            this.$emit('getData')
+          }
           this.isShow = false
           this.$refs.form.resetFields()
-          // 刷新父级列表数据
-          this.$emit('getData')
-          console.log('验证成功')
         }
       })
     },
     closeEvent() {
-      console.log(1)
       this.$refs.form.resetFields()
+      this.form = {
+        name: '',
+        code: '',
+        manager: '',
+        introduce: '',
+        pid: ''
+      }
       this.isShow = false
     }
   }
