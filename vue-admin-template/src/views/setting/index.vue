@@ -1,11 +1,16 @@
 <template>
+  <!-- 查： -->
   <div class="setting">
     <el-tabs v-model="activeName" @tab-click="handleClick">
       <el-tab-pane label="角色管理" name="first">
         <el-button type="primary" size="small">新增角色</el-button>
         <!-- 表格 -->
-        <el-table :data="tableData" border style="width: 100%">
-          <el-table-column label="序号" type="index" />
+        <el-table
+          :data="tableData"
+          border
+          style="width: 100%; margin-top: 20px"
+        >
+          <el-table-column label="序号" type="index" width="80px" />
           <el-table-column label="名称" prop="date" />
           <el-table-column label="描述" prop="name" />
           <el-table-column label="操作">
@@ -20,7 +25,7 @@
             </template>
           </el-table-column>
         </el-table>
-        <div style="text-align: center">
+        <div style="text-align: center; padding-top: 20px">
           <el-pagination layout="prev, pager, next" :total="50" />
         </div>
       </el-tab-pane>
