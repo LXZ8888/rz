@@ -28,3 +28,9 @@ export const sysRolePut = (data) => {
     data
   })
 }
+// 定义企业id
+export const company = (id) => {
+  return request({
+    url: '/company/' + id
+  })
+}

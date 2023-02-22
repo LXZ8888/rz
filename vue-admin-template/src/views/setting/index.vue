@@ -1,7 +1,7 @@
 <template>
   <!-- 查： -->
   <div class="setting">
-    <el-tabs v-model="activeName" @tab-click="handleClick">
+    <el-tabs>
       <el-tab-pane label="角色管理" name="first">
         <el-button
           type="primary"
@@ -46,7 +46,7 @@
           />
         </div>
       </el-tab-pane>
-      <el-tab-pane label="公司信息" name="second">公司信息</el-tab-pane>
+      <el-tab-pane label="公司信息" name="second" lazy><Info /></el-tab-pane>
     </el-tabs>
     <!-- 新增弹框组件 -->
     <Add ref="add" @getData="getData" />
@@ -55,10 +55,12 @@
 
 <script>
 import Add from './components/add.vue'
+// import Info from './components/info.vue'
 import { sysRole, sysRoleDelete } from '@/api/setting.js'
 export default {
   components: {
-    Add
+    Add,
+    Info: () => import('./components/info.vue')
   },
   data() {
     return {
