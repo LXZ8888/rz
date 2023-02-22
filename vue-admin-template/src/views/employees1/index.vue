@@ -10,7 +10,11 @@
           <el-button size="small" type="danger">简单表头导出</el-button>
           <el-button size="small" type="info">复杂表头导出</el-button>
           <el-button size="small" type="success">excel导入</el-button>
-          <el-button size="small" type="primary" plain>新增员工</el-button>
+          <el-button
+            size="small"
+            type="primary"
+            @click="addEvent"
+          >新增员工</el-button>
         </div>
       </div>
     </el-card>
@@ -53,16 +57,26 @@
           :formatter="changeFormOfEmployment"
         />
         <el-table-column prop="departmentName" label="部门" sortable />
-        <el-table-column prop="timeOfEntry" label="入职时间" sortable />
-        <el-table-column prop="enableState" label="账号状态" sortable />
+        <el-table-column
+          prop="timeOfEntry"
+          label="入职时间"
+          sortable
+          :formatter="changeTime"
+        />
+        <el-table-column
+          prop="enableState"
+          label="账号状态"
+          sortable
+          :formatter="changeWorkingState"
+        />
         <el-table-column label="操作" width="300">
-          <template>
+          <template v-slot="{ row }">
             <el-button type="text">查看</el-button>
             <el-button type="text">转正</el-button>
             <el-button type="text">调岗</el-button>
             <el-button type="text">离职</el-button>
             <el-button type="text">角色</el-button>
-            <el-button type="text">删除</el-button>
+            <el-button type="text" @click="delEvent(row.id)">删除</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -78,11 +92,19 @@
         />
       </div>
     </el-card>
+    <!-- 新增弹框 -->
+    <Add ref="add" @getData="getData" />
   </div>
 </template>
 <script>
-import { sysUser } from '@/api/employees'
+import dayjs from 'dayjs'
+import Add from './components/add.vue'
+import { sysUser, sysUserDelete } from '@/api/employees'
+import employeesData from '@/api/constant/employees'
 export default {
+  components: {
+    Add
+  },
   data() {
     return {
       page: {
@@ -104,7 +126,42 @@ export default {
       console.log(res)
     },
     changeFormOfEmployment(row, column, cellValue, index) {
-      return cellValue === 1 ? '正式' : '非正式'
+      // employeesData.hireType=[{id:1,value:'正式'}。。。]
+      // find：找到返回值是找到项的值，找不到返回undefined
+      const findItem = employeesData.hireType.find(
+        (item) => item.id === +cellValue
+      )
+      return findItem ? findItem.value : '-'
+    },
+    // 入职时间数据转换
+    changeTime(row, column, cellValue, index) {
+      // dayjs使用  1、下载 2、导入 3、使用
+      return dayjs(cellValue).format('YYYY-MM-DD')
+    },
+    // 状态数据转换
+    changeWorkingState(row, column, cellValue, index) {
+      // employeesData.hireType=[{id:1,value:'正式'}。。。]
+      // find：找到返回值是找到项的值，找不到返回undefined
+      const findItem = employeesData.workingState.find(
+        (item) => +item.id === cellValue
+      )
+      return findItem ? findItem.value : '-'
+    },
+    // 新增按钮弹框
+    addEvent() {
+      this.$refs.add.isShow = true
+    },
+    delEvent(id) {
+      this.$confirm('确定要删除吗', '提示')
+        .then(async() => {
+          await sysUserDelete(id)
+          this.$message.success('删除成功')
+          if (this.page.page > 1 && this.list.length === 1) {
+            this.page.page--
+          }
+          this.getData()
+        })
+        .catch(() => {})
     }
   }
 }

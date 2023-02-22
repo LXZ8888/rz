@@ -6,3 +6,18 @@ export const sysUser = (params) => {
     params
   })
 }
+// 新增员工
+export const sysUserPost = (data) => {
+  return request({
+    url: '/sys/user',
+    method: 'post',
+    data
+  })
+}
+// 删除员工
+export const sysUserDelete = (id) => {
+  return request({
+    url: '/sys/user/' + id,
+    method: 'delete'
+  })
+}
