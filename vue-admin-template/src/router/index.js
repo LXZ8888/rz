@@ -63,6 +63,13 @@ export const constantRoutes = [
         name: 'employees',
         component: () => import('@/views/employees1/index'),
         meta: { title: '员工', icon: 'people' }
+      },
+      {
+        path: 'import',
+        name: 'import',
+        component: () => import('@/views/employees1/import.vue'),
+        hidden: true
+        // 不在菜单中显示
       }
     ]
   },

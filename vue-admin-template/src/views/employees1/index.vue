@@ -9,7 +9,11 @@
         <div class="right">
           <el-button size="small" type="danger">简单表头导出</el-button>
           <el-button size="small" type="info">复杂表头导出</el-button>
-          <el-button size="small" type="success">excel导入</el-button>
+          <el-button
+            size="small"
+            type="success"
+            @click="$router.push('/employees/import')"
+          >excel导入</el-button>
           <el-button
             size="small"
             type="primary"
