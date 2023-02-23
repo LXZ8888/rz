@@ -1,5 +1,5 @@
 <template>
-  <!-- <div>
+  <div class="upload-excel">
     <input
       ref="excel-upload-input"
       class="excel-upload-input"
@@ -7,25 +7,23 @@
       accept=".xlsx, .xls"
       @change="handleClick"
     >
+    <div class="left">
+      <el-button
+        :loading="loading"
+        type="primary"
+        size="mini"
+        @click="handleUpload"
+      >点击上传</el-button>
+    </div>
     <div
-      class="drop"
+      class="right"
       @drop="handleDrop"
       @dragover="handleDragover"
       @dragenter="handleDragover"
     >
-      Drop excel file here or
-      <el-button
-        :loading="loading"
-        style="margin-left: 16px"
-        size="mini"
-        type="primary"
-        @click="handleUpload"
-      >
-        Browse
-      </el-button>
+      <span>将文件拖到此处</span>
     </div>
-  </div> -->
-  <div>123</div>
+  </div>
 </template>
 
 <script>
@@ -139,21 +137,26 @@ export default {
 }
 </script>
 
-<style scoped>
+<style scoped lang="scss">
 .excel-upload-input {
   display: none;
   z-index: -9999;
 }
-.drop {
-  border: 2px dashed #bbb;
-  width: 600px;
-  height: 160px;
-  line-height: 160px;
-  margin: 0 auto;
-  font-size: 24px;
-  border-radius: 5px;
-  text-align: center;
-  color: #bbb;
-  position: relative;
+.upload-excel {
+  width: 800px;
+  margin: 100px auto;
+  display: flex;
+  border: 1px dashed #ccc;
+  .left,
+  .right {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 140px;
+  }
+  .left {
+    border-right: 1px dashed #ccc;
+  }
 }
 </style>

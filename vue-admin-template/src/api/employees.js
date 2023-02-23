@@ -21,3 +21,11 @@ export const sysUserDelete = (id) => {
     method: 'delete'
   })
 }
+// 导入员工
+export const sysUserBatch = (data) => {
+  return request({
+    url: '/sys/user/batch',
+    method: 'post',
+    data
+  })
+}

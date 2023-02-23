@@ -70,6 +70,13 @@ export const constantRoutes = [
         component: () => import('@/views/employees1/import.vue'),
         hidden: true
         // 不在菜单中显示
+      },
+      {
+        path: 'detail/:id',
+        name: 'Detail',
+        component: () => import('@/views/employees1/detail.vue'),
+        hidden: true
+        // 不在菜单中显示
       }
     ]
   },

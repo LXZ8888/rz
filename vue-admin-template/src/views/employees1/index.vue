@@ -7,7 +7,11 @@
           <span>共{{ total }}条记录</span>
         </div>
         <div class="right">
-          <el-button size="small" type="danger">简单表头导出</el-button>
+          <el-button
+            size="small"
+            type="danger"
+            @click="exportClick"
+          >简单表头导出</el-button>
           <el-button size="small" type="info">复杂表头导出</el-button>
           <el-button
             size="small"
@@ -75,7 +79,10 @@
         />
         <el-table-column label="操作" width="300">
           <template v-slot="{ row }">
-            <el-button type="text">查看</el-button>
+            <el-button
+              type="text"
+              @click="$router.push('/employees/detail/' + row.id)"
+            >查看</el-button>
             <el-button type="text">转正</el-button>
             <el-button type="text">调岗</el-button>
             <el-button type="text">离职</el-button>
@@ -105,6 +112,8 @@ import dayjs from 'dayjs'
 import Add from './components/add.vue'
 import { sysUser, sysUserDelete } from '@/api/employees'
 import employeesData from '@/api/constant/employees'
+import { export_json_to_excel } from '@/vendor/Export2Excel'
+
 export default {
   components: {
     Add
@@ -127,7 +136,7 @@ export default {
       const res = await sysUser(this.page)
       this.list = res.data.rows
       this.total = res.data.total
-      console.log(res)
+      // console.log(res)
     },
     changeFormOfEmployment(row, column, cellValue, index) {
       // employeesData.hireType=[{id:1,value:'正式'}。。。]
@@ -166,6 +175,41 @@ export default {
           this.getData()
         })
         .catch(() => {})
+    },
+    async exportClick() {
+      const res = await sysUser({ page: 1, size: 99999 })
+      // const userArr = res.data.rows
+      const data = res.data.rows.map((item) => {
+        return [
+          item['username'],
+          item['mobile'],
+          item['workNumber'],
+          this.changeFormOfEmployment(null, null, item['formOfEmployment']),
+          item['departmentName'],
+          this.changeTime(null, null, item['timeOfEntry']),
+          this.changeWorkingState(null, null, item['enableState'])
+          // item['correctionTime']
+        ]
+      })
+
+      export_json_to_excel({
+        header: [
+          '姓名',
+          '手机号码',
+          '工号',
+          '聘用形式',
+          '部门',
+          '入职时间',
+          '账号状态'
+        ],
+        filename: '人资用户列表',
+        // merges: ['A2', 'A3'],
+        data: data
+      })
+      this.$message.success('导出成功')
+      // console.log(userArr)
+      // console.log(res)
+      // console.log(this.list)
     }
   }
 }

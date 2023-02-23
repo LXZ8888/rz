@@ -132,3 +132,10 @@ export function changeData(arr, pid) {
     }
   })
 }
+
+// excel时间转换成js时间
+export function excelTojsTime(num) {
+  const t = new Date((num - 1) * 24 * 60 * 60 * 1000 - 8 * 60 * 60 * 1000)
+  t.setYear(t.getFullYear() - 70)
+  return t
+}
