@@ -29,3 +29,40 @@ export const sysUserBatch = (data) => {
     data
   })
 }
+// 用户信息修改
+export const sysUserPut = (data) => {
+  return request({
+    url: `/sys/user/${data.id}`,
+    method: 'put',
+    data
+  })
+}
+// 获取员工个人基础信息
+export const employeesPersonalInfo = (id) => {
+  return request({
+    url: `/employees/${id}/personalInfo`
+  })
+}
+// 修改员工个人基础信息
+export const employeesPersonalInfoPut = (data) => {
+  return request({
+    url: `/employees/${data.userId}/personalInfo`,
+    method: 'put',
+    data
+  })
+}
+// 定义岗位信息获取
+export const employeesJobs = (id) => {
+  return request({
+    url: `/employees/${id}/jobs`
+    // method: 'put'
+  })
+}
+// 定义岗位信息gx
+export const employeesJobsPut = (data) => {
+  return request({
+    url: `/employees/${data.userId}/jobs`,
+    method: 'put',
+    data
+  })
+}

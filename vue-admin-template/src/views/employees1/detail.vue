@@ -28,8 +28,15 @@
             </el-form-item>
           </el-form>
         </el-tab-pane>
-        <el-tab-pane label="个人详情" name="second">个人详情</el-tab-pane>
-        <el-tab-pane label="岗位信息" name="third">岗位信息</el-tab-pane>
+        <el-tab-pane label="个人详情" name="second">
+          <Info
+            lazy
+            :user-info="userInfo2"
+            @getData="getData"
+          /></el-tab-pane>
+        <el-tab-pane label="岗位信息" name="third">
+          <Job lazy />
+        </el-tab-pane>
       </el-tabs>
     </el-card>
   </div>
@@ -37,11 +44,20 @@
 
 <script>
 import { sysUser } from '@/api/user'
+import { sysUserPut } from '@/api/employees'
+
 export default {
+  components: {
+    Info: () => import('./components/Info.vue'),
+    Job: () => import('./components/Job.vue')
+  },
+
   data() {
     return {
       id: this.$route.params.id,
       activeName: 'first',
+      userInfo: {},
+      userInfo2: {},
       form: {
         username: '',
         password: ''
@@ -67,15 +83,26 @@ export default {
     async getData() {
       const res = await sysUser(this.id)
       this.form.username = res.data.username
+      this.userInfo = res.data
+      this.userInfo2 = JSON.parse(JSON.stringify(res.data))
       // this.form.password = res.data.password
       console.log(res)
     },
     // 更新按钮点击
-    submit() {
+    submit(id) {
       console.log('更新')
-      this.$refs.form.validate((result) => {
+      this.$refs.form.validate(async(result) => {
         if (result) {
-          console.log('验证通过')
+          const res = await sysUserPut({
+            ...this.userInfo,
+            ...this.form
+          })
+          this.$message.success('更新成功')
+          console.log(res)
+          this.getData()
+          if (this.id === this.$store.state.userInfo.id) {
+            this.$store.dispatch('user/getUserInfo')
+          }
         }
       })
     }

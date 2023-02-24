@@ -1,18 +1,22 @@
 <template>
   <div>
-    社保
-    <button @click="btnClick">调用api</button>
+    <!--
+    上传组件
+    el-upload
+     http-request:自定义上传
+   -->
+    <el-upload :http-request="httpRequest" action="#">上传图片</el-upload>
   </div>
 </template>
+
 <script>
-import { sysLogin } from '@/api/test'
 export default {
   methods: {
-    async btnClick() {
-      const res = await sysLogin()
+    httpRequest(res) {
       console.log(res)
     }
   }
 }
 </script>
+
 <style></style>
