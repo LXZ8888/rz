@@ -3,13 +3,19 @@
     <input type="file" @change="changeEvent">
     <img :src="imgUrl" alt="" class="box">
     {{ imgUrl }}
+    <UploadImg />
   </div>
 </template>
 
 <script>
+import UploadImg from '@/components/Uploadimg'
 import COS from 'cos-js-sdk-v5'
 
 export default {
+  components: {
+    UploadImg
+  },
+
   data() {
     return {
       cos: '',

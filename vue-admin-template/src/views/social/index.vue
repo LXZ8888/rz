@@ -5,7 +5,11 @@
     el-upload
      http-request:自定义上传
    -->
-    <el-upload :http-request="httpRequest" action="#">上传图片</el-upload>
+    <el-upload
+      :http-request="httpRequest"
+      action="#"
+      :before-upload="beforeUpload"
+    >上传图片</el-upload>
   </div>
 </template>
 

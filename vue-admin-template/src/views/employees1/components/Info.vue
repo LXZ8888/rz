@@ -58,6 +58,8 @@
         <el-col :span="12">
           <el-form-item label="员工头像">
             <!-- 放置上传图片 -->
+            <UploadImg v-model="userInfo.staffPhoto" />
+            <!--  -->
           </el-form-item>
         </el-col>
       </el-row>
@@ -484,7 +486,7 @@ export default {
       await sysUserPut(this.userInfo)
       this.$message.success('更新用户信息成功')
       this.$emit('getData')
-      if (this.userId === this.$store.state.userInfo.id) {
+      if (this.userId === this.$store.state.user.userInfo.id) {
         this.$store.dispatch('user/getUserInfo')
       }
     },

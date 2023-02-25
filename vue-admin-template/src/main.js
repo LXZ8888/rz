@@ -15,6 +15,8 @@ import router from './router'
 
 import '@/icons' // icon
 import '@/permission' // permission control
+import UploadImg from '@/components/Uploadimg'
+Vue.component('UploadImg', UploadImg)
 
 /**
  * If you don't want to use mock-server
