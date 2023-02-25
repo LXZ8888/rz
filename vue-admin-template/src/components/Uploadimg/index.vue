@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="upload-img">
     <!--
       上传组件
       el-upload
@@ -8,13 +8,38 @@
     <el-upload
       :http-request="httpRequest"
       action="#"
-      :before-upload="beforeUpload"
       :show-file-list="false"
+      :before-upload="beforeUpload"
       class="upload"
     >
-      <img v-if="value" :src="value" alt="" class="img">
+      <img v-if="value" v-errorimg :src="value" alt="" class="img">
       <div v-else class="icon"><i class="el-icon-plus" /></div>
     </el-upload>
+    <!-- 删除按钮 -->
+    <i v-if="value" class="del el-icon-delete" @click="delClick" />
+    <!-- 预览按钮 -->
+    <i v-if="value" class="big el-icon-zoom-in" @click="showBig = true" />
+    <!-- 预览弹窗 -->
+    <el-dialog
+      v-errorimg
+      title="图片预览"
+      width="600px"
+      :visible.sync="showBig"
+      center
+    >
+      <img
+        :src="value"
+        alt=""
+        style="width: 500px"
+      ></el-dialog>
+    <!-- 环形进度条 -->
+    <el-progress
+      v-if="showProgress"
+      type="circle"
+      :percentage="percentage"
+      class="progress"
+      :width="200"
+    />
   </div>
 </template>
 
@@ -32,9 +57,27 @@ export default {
     }
   },
   data() {
-    return {}
+    return {
+      showBig: false,
+      percentage: 0,
+      showProgress: false
+    }
   },
   methods: {
+    beforeUpload(file) {
+      this.showProgress = true
+      const limitType = file.type === 'image/jpeg' || file.type === 'image/png'
+      if (!limitType) {
+        this.$message.error('请上传jpg与png图片')
+      }
+      const limitSize = file.size / 1024 / 1024 < 1
+
+      if (!limitSize) {
+        this.$message.error('请上传1MB以内的图片')
+      }
+      return limitSize && limitType
+    },
+
     httpRequest(res) {
       cos.uploadFile(
         {
@@ -48,6 +91,10 @@ export default {
             1024 *
             5 /* 触发分块上传的阈值，超过5MB使用分块上传，小于5MB使用简单上传。可自行设置，非必须 */,
           onProgress: (progressData) => {
+            this.percentage = +(progressData.percent * 100).toFixed(2)
+            if (progressData.percent === 1) {
+              this.showProgress = false
+            }
             console.log(JSON.stringify(progressData))
           }
         },
@@ -62,8 +109,13 @@ export default {
         }
       )
     },
-    beforeUpload() {
-      console.log(1)
+    // 删除点击时间
+    delClick() {
+      this.$confirm('您确定要删除吗')
+        .then(() => {
+          this.$emit('input', '')
+        })
+        .catch(() => {})
     }
   }
 }
@@ -96,5 +148,36 @@ export default {
     height: 100%;
     object-fit: contain;
   }
+}
+.upload-img {
+  position: relative;
+  width: 200px;
+  &:hover {
+    .del,
+    .big {
+      display: block;
+    }
+  }
+  .del,
+  .big {
+    position: absolute;
+    top: 5px;
+    right: 5px;
+    font-size: 20px;
+    cursor: pointer;
+    display: none;
+    &:hover {
+      color: red;
+    }
+  }
+  .big {
+    right: 30px;
+  }
+}
+.progress {
+  position: absolute;
+  top: 0;
+  left: 0;
+  background-color: #fff;
 }
 </style>
