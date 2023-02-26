@@ -17,7 +17,8 @@ import '@/icons' // icon
 import '@/permission' // permission control
 import UploadImg from '@/components/Uploadimg'
 Vue.component('UploadImg', UploadImg)
-
+import PrintNb from 'vue-print-nb'
+Vue.use(PrintNb)
 /**
  * If you don't want to use mock-server
  * you want to use MockJs for mock api

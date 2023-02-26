@@ -54,7 +54,13 @@
         <el-table-column prop="staffPhoto" label="头像" sortable>
           <template v-slot="{ row }">
             <!-- <div>{{ row.staffPhoto }}</div> -->
-            <img v-errorimg alt="" :src="row.staffPhoto" class="avatar">
+            <img
+              v-errorimg
+              alt=""
+              :src="row.staffPhoto"
+              class="avatar"
+              @click="imgClick(row.staffPhoto)"
+            >
           </template>
         </el-table-column>
         <el-table-column prop="workNumber" label="工号" sortable />
@@ -86,7 +92,7 @@
             <el-button type="text">转正</el-button>
             <el-button type="text">调岗</el-button>
             <el-button type="text">离职</el-button>
-            <el-button type="text">角色</el-button>
+            <el-button type="text" @click="roleEvent">角色</el-button>
             <el-button type="text" @click="delEvent(row.id)">删除</el-button>
           </template>
         </el-table-column>
@@ -105,18 +111,26 @@
     </el-card>
     <!-- 新增弹框 -->
     <Add ref="add" @getData="getData" />
+    <el-dialog title="生成二维码" width="500px" :visible.sync="showCode">
+      <canvas ref="canvas" />
+    </el-dialog>
+    <!-- 角色管理 -->
+    <SetRole ref="setRole" />
   </div>
 </template>
 <script>
+import SetRole from './components/setRole.vue'
 import dayjs from 'dayjs'
 import Add from './components/add.vue'
 import { sysUser, sysUserDelete } from '@/api/employees'
 import employeesData from '@/api/constant/employees'
 import { export_json_to_excel } from '@/vendor/Export2Excel'
+import Qrcode from 'qrcode'
 
 export default {
   components: {
-    Add
+    Add,
+    SetRole
   },
   data() {
     return {
@@ -125,7 +139,8 @@ export default {
         size: 10
       },
       list: [],
-      total: 10
+      total: 10,
+      showCode: false
     }
   },
   created() {
@@ -210,6 +225,23 @@ export default {
       // console.log(userArr)
       // console.log(res)
       // console.log(this.list)
+    },
+    // 头像点击生成二维码
+    imgClick(avatar) {
+      this.showCode = true
+      if (avatar) {
+        this.$nextTick(() => {
+          Qrcode.toCanvas(this.$refs.canvas, avatar, {
+            // 二维码的配制，常用配制，宽与高之类
+            width: 350,
+            height: 350
+          })
+        })
+      }
+    },
+    roleEvent() {
+      this.$refs.setRole.isShow = true
+      this.$refs.setRole.getData()
     }
   }
 }

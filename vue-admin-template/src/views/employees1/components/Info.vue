@@ -93,6 +93,9 @@
 
         <el-form-item label="员工照片">
           <!-- 放置上传图片 -->
+          <!-- 放置上传图片 -->
+          <UploadImg v-model="formData.staffPhoto" />
+          <!--  -->
         </el-form-item>
         <el-form-item label="国家/地区">
           <el-select v-model="formData.nationalArea" class="inputW2">
