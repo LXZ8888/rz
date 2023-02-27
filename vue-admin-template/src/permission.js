@@ -9,9 +9,10 @@ router.beforeEach(async(to, from, next) => {
     } else {
       if (!store.state.user.userInfo.userId) {
         await store.dispatch('user/getUserInfo')
+        next(to)
+      } else {
+        next()
       }
-
-      next()
     }
   } else {
     if (whitePage.includes(to.path.toLowerCase())) {

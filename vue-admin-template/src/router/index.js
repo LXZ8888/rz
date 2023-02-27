@@ -5,34 +5,14 @@ Vue.use(Router)
 
 /* Layout */
 import Layout from '@/layout'
-export const constantRoutes = [
-  {
-    path: '/login',
-    component: () => import('@/views/login/index'),
-    hidden: true
-  },
-
-  {
-    path: '/404',
-    component: () => import('@/views/404'),
-    hidden: true
-  },
-  {
-    path: '/',
-    component: Layout,
-    redirect: '/dashboard',
-    children: [
-      {
-        path: 'dashboard',
-        name: 'Dashboard',
-        component: () => import('@/views/dashboard/index'),
-        meta: { title: '首页', icon: 'dashboard' }
-      }
-    ]
-  },
+// 其他路由规则
+export const otherRoutes = [
   {
     path: '/approvals',
     component: Layout,
+    meta: {
+      name: 'approvals'
+    },
     children: [
       {
         path: '',
@@ -45,6 +25,9 @@ export const constantRoutes = [
   {
     path: '/departments',
     component: Layout,
+    meta: {
+      name: 'departments'
+    },
     children: [
       {
         path: '',
@@ -57,6 +40,9 @@ export const constantRoutes = [
   {
     path: '/employees',
     component: Layout,
+    meta: {
+      name: 'employees'
+    },
     children: [
       {
         path: '',
@@ -83,6 +69,9 @@ export const constantRoutes = [
   {
     path: '/permission',
     component: Layout,
+    meta: {
+      name: 'permissions'
+    },
     children: [
       {
         path: '',
@@ -95,6 +84,9 @@ export const constantRoutes = [
   {
     path: '/attendances',
     component: Layout,
+    meta: {
+      name: 'attendances'
+    },
     children: [
       {
         path: '',
@@ -107,6 +99,9 @@ export const constantRoutes = [
   {
     path: '/salarys',
     component: Layout,
+    meta: {
+      name: 'salarys'
+    },
     children: [
       {
         path: '',
@@ -119,6 +114,9 @@ export const constantRoutes = [
   {
     path: '/setting',
     component: Layout,
+    meta: {
+      name: 'settings'
+    },
     children: [
       {
         path: '',
@@ -131,6 +129,9 @@ export const constantRoutes = [
   {
     path: '/social',
     component: Layout,
+    meta: {
+      name: 'social_securitys'
+    },
     children: [
       {
         path: '',
@@ -139,10 +140,36 @@ export const constantRoutes = [
         meta: { title: '社保', icon: 'table' }
       }
     ]
+  }
+]
+export const constantRoutes = [
+  {
+    path: '/login',
+    component: () => import('@/views/login/index'),
+    hidden: true
   },
 
+  {
+    path: '/404',
+    component: () => import('@/views/404'),
+    hidden: true
+  },
+  {
+    path: '/',
+    component: Layout,
+    redirect: '/dashboard',
+    children: [
+      {
+        path: 'dashboard',
+        name: 'Dashboard',
+        component: () => import('@/views/dashboard/index'),
+        meta: { title: '首页', icon: 'dashboard' }
+      }
+    ]
+  }
+
   // 404 page must be placed at the end !!!
-  { path: '*', redirect: '/404', hidden: true }
+  // { path: '*', redirect: '/404', hidden: true }
 ]
 
 const createRouter = () =>

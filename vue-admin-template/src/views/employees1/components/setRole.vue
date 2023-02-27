@@ -1,5 +1,11 @@
 <template>
-  <el-dialog title="分配角色" width="600px" :visible.sync="isShow">
+  <el-dialog
+    title="分配角色"
+    width="600px"
+    :visible.sync="isShow"
+    @close="closeEvent"
+  >
+    <h3>{{ selectVal }}</h3>
     <el-checkbox
       v-for="item in list"
       :key="item.id"
@@ -8,21 +14,24 @@
     >{{ item.name }}</el-checkbox>
     <template #footer>
       <div class="tc">
-        <el-button type="primary">提交</el-button>
-        <el-button>取消</el-button>
+        <el-button type="primary" @click="submit">提交</el-button>
+        <el-button @click="isShow = false">取消</el-button>
       </div>
     </template>
   </el-dialog>
 </template>
 
 <script>
+import { sysUser } from '@/api/user'
 import { sysRole } from '@/api/setting'
+import { sysUserAssignRoles } from '@/api/employees'
 export default {
   data() {
     return {
       isShow: false,
       list: [],
-      selectVal: []
+      selectVal: [],
+      id: ''
     }
   },
 
@@ -36,6 +45,26 @@ export default {
         this.list = res.data.rows
         console.log('获取角色列表', res)
       }
+    },
+    // 获取当前用户角色Id
+    async getUserRoleIds(id) {
+      const res = await sysUser(id)
+      this.selectVal = res.data.roleIds || []
+      console.log('当前用户角色', res)
+      this.id = id
+    },
+    closeEvent() {
+      this.selectVal = []
+    },
+    // 提交点击
+    async submit() {
+      console.log(1)
+      await sysUserAssignRoles({
+        id: this.id,
+        roleIds: this.selectVal
+      })
+      this.$message.success('分配角色成功')
+      this.isShow = false
     }
   }
 }

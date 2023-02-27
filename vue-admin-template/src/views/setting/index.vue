@@ -20,7 +20,11 @@
           <el-table-column label="描述" prop="description" />
           <el-table-column label="操作">
             <template v-slot="{ row }">
-              <el-button type="success" size="small">分配权限</el-button>
+              <el-button
+                type="success"
+                size="small"
+                @click="setEvent(row)"
+              >分配权限</el-button>
               <el-button
                 type="primary"
                 size="small"
@@ -50,17 +54,21 @@
     </el-tabs>
     <!-- 新增弹框组件 -->
     <Add ref="add" @getData="getData" />
+    <!-- 分配权限弹框 -->
+    <setPermission ref="set" />
   </div>
 </template>
 
 <script>
 import Add from './components/add.vue'
+import SetPermission from './components/setPermission.vue'
 // import Info from './components/info.vue'
 import { sysRole, sysRoleDelete } from '@/api/setting.js'
 export default {
   components: {
     Add,
-    Info: () => import('./components/info.vue')
+    Info: () => import('./components/info.vue'),
+    SetPermission
   },
   data() {
     return {
@@ -115,6 +123,17 @@ export default {
           this.getData()
         })
         .catch(() => {})
+    },
+    // 分配权限点击
+    setEvent(row) {
+      this.$refs.set.isShow = true
+      // 调用弹框组件获取列表
+      this.$refs.set.getData()
+      // 调用弹框方法获取详情
+      this.$refs.set.getRoleInfo(row.id)
+      this.$refs.set.title = row.name // 子=父
+      // this.title=row.title  忘记是在不同的组件调用  父
+      console.log(row)
     }
   }
 }

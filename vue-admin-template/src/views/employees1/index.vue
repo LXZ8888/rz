@@ -92,7 +92,7 @@
             <el-button type="text">转正</el-button>
             <el-button type="text">调岗</el-button>
             <el-button type="text">离职</el-button>
-            <el-button type="text" @click="roleEvent">角色</el-button>
+            <el-button type="text" @click="roleEvent(row)">角色</el-button>
             <el-button type="text" @click="delEvent(row.id)">删除</el-button>
           </template>
         </el-table-column>
@@ -239,9 +239,11 @@ export default {
         })
       }
     },
-    roleEvent() {
+    roleEvent(row) {
       this.$refs.setRole.isShow = true
       this.$refs.setRole.getData()
+      console.log(row)
+      this.$refs.setRole.getUserRoleIds(row.id)
     }
   }
 }
