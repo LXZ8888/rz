@@ -93,7 +93,15 @@
             <el-button type="text">调岗</el-button>
             <el-button type="text">离职</el-button>
             <el-button type="text" @click="roleEvent(row)">角色</el-button>
-            <el-button type="text" @click="delEvent(row.id)">删除</el-button>
+            <el-button
+              v-if="
+                $store.state.user.userInfo.roles.points.includes(
+                  'employees_delBtn'
+                )
+              "
+              type="text"
+              @click="delEvent(row.id)"
+            >删除</el-button>
           </template>
         </el-table-column>
       </el-table>

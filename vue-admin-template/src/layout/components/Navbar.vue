@@ -7,8 +7,11 @@
     />
     <div class="name">
       <span>江苏传智播客教育科技股份有限公司</span>
+
       <span class="tip">体验版</span>
     </div>
+    <Lang />
+    <svg-icon icon-class="fullscreen" class="mr" @click="fullClick" />
     <el-dropdown trigger="click">
       <div class="user">
         <img
@@ -34,13 +37,16 @@
 </template>
 
 <script>
+import screenfull from 'screenfull'
 import { mapGetters } from 'vuex'
+import Lang from '@/components/lang'
 
 import Hamburger from '@/components/Hamburger'
 
 export default {
   components: {
-    Hamburger
+    Hamburger,
+    Lang
   },
   data() {
     return {
@@ -70,6 +76,14 @@ export default {
         })
         .catch(() => {})
       console.log('退出')
+    },
+    // 全屏点击
+    fullClick() {
+      if (screenfull.isEnabled) {
+        screenfull.toggle()
+      } else {
+        this.$message.error('该浏览器不支持全屏')
+      }
     }
   }
 }
@@ -114,5 +128,9 @@ export default {
       margin: 0 12px;
     }
   }
+}
+.mr {
+  margin-right: 15px;
+  cursor: pointer;
 }
 </style>

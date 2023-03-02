@@ -1,6 +1,6 @@
 // import { setToken, getToken } from '@/utils/auth'
 import { sysProfile, sysUser } from '@/api/user'
-import router, { otherRoutes, constantRoutes } from '@/router'
+import router, { otherRoutes, constantRoutes, resetRouter } from '@/router'
 
 export default {
   namespaced: true,
@@ -23,6 +23,7 @@ export default {
       state.token = ''
       // setToken('')
       state.userInfo = ''
+      resetRouter()
     }
   },
   actions: {

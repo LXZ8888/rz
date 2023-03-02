@@ -1,23 +1,19 @@
 <template>
   <div>
-    <button @click="btnClick">点击生成二维码</button>
-    <canvas ref="canvas" />
+    {{ $t('xxx') }}
+    <button @click="$i18n.locale = 'en'">切换成英文</button>
+    <button @click="$i18n.locale = 'zh'">切换成中文</button>
+    <button @click="btnClick">确定框</button>
   </div>
 </template>
 
 <script>
-import Qrcode from 'qrcode'
-
 export default {
-  data() {
-    return {}
-  },
   methods: {
     btnClick() {
-      Qrcode.toCanvas(this.$refs.canvas, '123', {
-        width: 350,
-        height: 350
-      })
+      this.$confirm('提示信息')
+        .then(() => {})
+        .catch(() => {})
     }
   }
 }

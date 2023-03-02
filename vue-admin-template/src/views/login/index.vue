@@ -14,7 +14,9 @@
         />
       </el-form-item>
       <el-form-item>
-        <el-button type="primary" class="btn" @click="subimt">登录</el-button>
+        <el-button type="primary" class="btn" @click="subimt">{{
+          $t('login.login')
+        }}</el-button>
       </el-form-item>
     </el-form>
   </div>
@@ -31,7 +33,7 @@ export default {
       },
       rules: {
         mobile: [
-          { required: true, message: '必填', trigger: 'change' },
+          { required: true, message: this.$t('login.tip'), trigger: 'change' },
           {
             pattern: /^1[3,9]\d{9}$/,
             message: '请正确输入手机号',
